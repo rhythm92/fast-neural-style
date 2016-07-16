@@ -77,6 +77,7 @@ def main(argv=None):
             print('Using model from {}'.format(file))
             saver = tf.train.Saver()
             saver.restore(sess, file)
+            sess.run(tf.initialize_local_variables())
             coord = tf.train.Coordinator()
             threads = tf.train.start_queue_runners(coord=coord)
             i = 0
@@ -142,6 +143,7 @@ def main(argv=None):
         if file:
             print('Restoring model from {}'.format(file))
             saver.restore(sess, file)
+            sess.run(tf.initialize_local_variables())
         else:
             print('New model initilized')
             sess.run(tf.initialize_all_variables())
@@ -154,13 +156,15 @@ def main(argv=None):
                 _, loss_t, step = sess.run([train_op, loss, global_step])
                 elapsed_time = time.time() - start_time
                 start_time = time.time()
+                print(step, loss_t, elapsed_time)
                 if step % 100 == 0:
-                    print(step, loss_t, elapsed_time)
                     output_t = sess.run(output_format)
                     for i, raw_image in enumerate(output_t):
                         misc.imsave('out{}.png'.format(i), raw_image)
-                if step % 10000 == 0:
+                        print('Save image.')
+                if step % 1000 == 0:
                     saver.save(sess, FLAGS.MODEL_PATH + '/fast-style-model', global_step=step)
+                    print ('Save model.')
         except tf.errors.OutOfRangeError:
             print('Done training -- epoch limit reached')
         finally:
