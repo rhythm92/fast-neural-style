@@ -1,3 +1,5 @@
+Minor changes of base repository. 
+
 # Fast neural style transfer
 
 A short writeup and example images are up on [my blog](http://olavnymoen.com/2016/07/07/image-transformation-network).
